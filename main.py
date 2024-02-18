@@ -475,10 +475,10 @@ def decrement_days():
             data['days'] -= 1
             # Тут можно добавить пересчет дневного бюджета, если необходимо
             # Например:
-            # if data['days'] > 0:
-            #     data['daily_budget'] = data['total_amount'] / data['days']
-            # else:
-            #     data['daily_budget'] = 0
+            if data['days'] > 0:
+                data['daily_budget'] = data['total_amount'] / data['days']
+            else:
+                data['daily_budget'] = 0
     save_user_data(user_data)
     # Запланировать следующее уменьшение через 24 часа
     threading.Timer(86400, decrement_days).start()
