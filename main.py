@@ -207,6 +207,17 @@ def yani(message):
 
 
 
+@bot.message_handler(commands=['numofusers'])
+def num_of_users(message):
+    try:
+        with open('user_data.json', 'r') as file:
+            user_data = json.load(file)
+        num_users = len(user_data)
+        bot.reply_to(message, f"Количество пользователей: {num_users}")
+    except Exception as e:
+        bot.reply_to(message, "Ошибка при подсчете пользователей: " + str(e))
+
+
 @bot.message_handler(func=lambda message: message.text == 'Курс доллара')
 def kursd(message):
     dollar(message)
