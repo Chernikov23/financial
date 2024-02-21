@@ -1,1 +1,452 @@
 
+{
+    "1477027628": {
+        "total_amount": 15000.0,
+        "spent": 0.0,
+        "expenses": [],
+        "categories": [],
+        "crypto_amount": 0.0,
+        "principal": 0.0,
+        "interest_rate": 0.0,
+        "days": 17.0,
+        "daily_budget": 882.3529411764706
+    },
+    "1812831325": {
+        "total_amount": 0.0,
+        "spent": 0.0,
+        "expenses": [],
+        "categories": [],
+        "crypto_amount": 0.0,
+        "principal": 0.0,
+        "interest_rate": 0.0,
+        "days": 0,
+        "daily_budget": 0.0
+    },
+    "5814599644": {
+        "total_amount": 0.0,
+        "spent": 0.0,
+        "expenses": [],
+        "categories": [],
+        "crypto_amount": 0.0,
+        "principal": 0.0,
+        "interest_rate": 0.0,
+        "days": 0,
+        "daily_budget": 0.0
+    },
+    "1060364364": {
+        "total_amount": -15000.0,
+        "spent": 0.0,
+        "expenses": [
+            {
+                "category": "������",
+                "amount": 15000.0
+            }
+        ],
+        "categories": [],
+        "crypto_amount": 0.0,
+        "principal": 0.0,
+        "interest_rate": 0.0,
+        "days": 0,
+        "daily_budget": 0
+    },
+    "5296613478": {
+        "total_amount": 0.0,
+        "spent": 0.0,
+        "expenses": [],
+        "categories": [],
+        "crypto_amount": 0.0,
+        "principal": 0.0,
+        "interest_rate": 0.0,
+        "days": 0,
+        "daily_budget": 0.0
+    },
+    "880492737": {
+        "total_amount": 0.0,
+        "spent": 0.0,
+        "expenses": [],
+        "categories": [],
+        "crypto_amount": 0.0,
+        "principal": 0.0,
+        "interest_rate": 0.0,
+        "days": 0,
+        "daily_budget": 0.0
+    },
+    "6891025564": {
+        "total_amount": -100.0,
+        "spent": 0.0,
+        "expenses": [
+            {
+                "category": "����",
+                "amount": 100.0
+            }
+        ],
+        "categories": [],
+        "crypto_amount": 0.0,
+        "principal": 0.0,
+        "interest_rate": 0.0,
+        "days": 0,
+        "daily_budget": 0
+    },
+    "1402492581": {
+        "total_amount": 0.0,
+        "spent": 0.0,
+        "expenses": [],
+        "categories": [],
+        "crypto_amount": 0.0,
+        "principal": 0.0,
+        "interest_rate": 0.0,
+        "days": 0,
+        "daily_budget": 0.0
+    },
+    "6511759564": {
+        "total_amount": -135000.0,
+        "spent": 0.0,
+        "expenses": [
+            {
+                "category": "�����",
+                "amount": 100000.0
+            },
+            {
+                "category": "�����������",
+                "amount": 35000.0
+            }
+        ],
+        "categories": [],
+        "crypto_amount": 0.0,
+        "principal": 0.0,
+        "interest_rate": 0.0,
+        "days": 0,
+        "daily_budget": 0
+    },
+    "1080143608": {
+        "total_amount": 0.0,
+        "spent": 0.0,
+        "expenses": [],
+        "categories": [],
+        "crypto_amount": 0.0,
+        "principal": 0.0,
+        "interest_rate": 0.0,
+        "days": 0,
+        "daily_budget": 0.0
+    },
+    "234219338": {
+        "total_amount": 0.0,
+        "spent": 0.0,
+        "expenses": [],
+        "categories": [],
+        "crypto_amount": 0.0,
+        "principal": 0.0,
+        "interest_rate": 0.0,
+        "days": 0,
+        "daily_budget": 0.0
+    },
+    "1085441097": {
+        "total_amount": 0.0,
+        "spent": 0.0,
+        "expenses": [],
+        "categories": [],
+        "crypto_amount": 0.0,
+        "principal": 0.0,
+        "interest_rate": 0.0,
+        "days": 0,
+        "daily_budget": 0.0
+    },
+    "791457429": {
+        "total_amount": 39330.0,
+        "spent": 0.0,
+        "expenses": [
+            {
+                "category": "������",
+                "amount": 670.0
+            },
+            {
+                "category": "������",
+                "amount": 10000.0
+            }
+        ],
+        "categories": [],
+        "crypto_amount": 0.0,
+        "principal": 0.0,
+        "interest_rate": 0.0,
+        "days": 48.0,
+        "daily_budget": 819.375
+    },
+    "5010586348": {
+        "total_amount": 0.0,
+        "spent": 0.0,
+        "expenses": [],
+        "categories": [],
+        "crypto_amount": 0.0,
+        "principal": 0.0,
+        "interest_rate": 0.0,
+        "days": 0,
+        "daily_budget": 0
+    },
+    "654236236": {
+        "total_amount": 0.0,
+        "spent": 0.0,
+        "expenses": [],
+        "categories": [],
+        "crypto_amount": 0.0,
+        "principal": 0.0,
+        "interest_rate": 0.0,
+        "days": 0,
+        "daily_budget": 0.0
+    },
+    "1057055091": {
+        "total_amount": 0.0,
+        "spent": 0.0,
+        "expenses": [],
+        "categories": [],
+        "crypto_amount": 0.0,
+        "principal": 0.0,
+        "interest_rate": 0.0,
+        "days": 0,
+        "daily_budget": 0.0
+    },
+    "1623751121": {
+        "total_amount": 0.0,
+        "spent": 0.0,
+        "expenses": [],
+        "categories": [],
+        "crypto_amount": 0.0,
+        "principal": 0.0,
+        "interest_rate": 0.0,
+        "days": 0,
+        "daily_budget": 0.0
+    },
+    "1455884128": {
+        "total_amount": 0.0,
+        "spent": 0.0,
+        "expenses": [],
+        "categories": [],
+        "crypto_amount": 0.0,
+        "principal": 0.0,
+        "interest_rate": 0.0,
+        "days": 0,
+        "daily_budget": 0.0
+    },
+    "1166249126": {
+        "total_amount": 0.0,
+        "spent": 0.0,
+        "expenses": [],
+        "categories": [],
+        "crypto_amount": 0.0,
+        "principal": 0.0,
+        "interest_rate": 0.0,
+        "days": 0,
+        "daily_budget": 0
+    },
+    "1642517329": {
+        "total_amount": 0.0,
+        "spent": 0.0,
+        "expenses": [],
+        "categories": [],
+        "crypto_amount": 0.0,
+        "principal": 0.0,
+        "interest_rate": 0.0,
+        "days": 0,
+        "daily_budget": 0.0
+    },
+    "939676325": {
+        "total_amount": 100000.0,
+        "spent": 0.0,
+        "expenses": [],
+        "categories": [],
+        "crypto_amount": 0.0,
+        "principal": 0.0,
+        "interest_rate": 0.0,
+        "days": 8.0,
+        "daily_budget": 12500.0
+    },
+    "5034855785": {
+        "total_amount": 0.0,
+        "spent": 0.0,
+        "expenses": [],
+        "categories": [],
+        "crypto_amount": 0.0,
+        "principal": 0.0,
+        "interest_rate": 0.0,
+        "days": 0,
+        "daily_budget": 0.0
+    },
+    "6215233947": {
+        "total_amount": 0.0,
+        "spent": 0.0,
+        "expenses": [],
+        "categories": [],
+        "crypto_amount": 0.0,
+        "principal": 0.0,
+        "interest_rate": 0.0,
+        "days": 0,
+        "daily_budget": 0
+    },
+    "1398349887": {
+        "total_amount": 0.0,
+        "spent": 0.0,
+        "expenses": [],
+        "categories": [],
+        "crypto_amount": 0.0,
+        "principal": 0.0,
+        "interest_rate": 0.0,
+        "days": 0,
+        "daily_budget": 0.0
+    },
+    "1134130721": {
+        "total_amount": -700000000.0,
+        "spent": 0.0,
+        "expenses": [
+            {
+                "category": "�����",
+                "amount": 700000000.0
+            }
+        ],
+        "categories": [],
+        "crypto_amount": 0.0,
+        "principal": 0.0,
+        "interest_rate": 0.0,
+        "days": 0,
+        "daily_budget": 0
+    },
+    "713753420": {
+        "total_amount": 0.0,
+        "spent": 0.0,
+        "expenses": [],
+        "categories": [],
+        "crypto_amount": 0.0,
+        "principal": 0.0,
+        "interest_rate": 0.0,
+        "days": 0,
+        "daily_budget": 0.0
+    },
+    "5126629679": {
+        "total_amount": 325.8,
+        "spent": 0.0,
+        "expenses": [
+            {
+                "category": "���",
+                "amount": 144.0
+            }
+        ],
+        "categories": [],
+        "crypto_amount": 0.0,
+        "principal": 0.0,
+        "interest_rate": 0.0,
+        "days": 2.0,
+        "daily_budget": 162.9
+    },
+    "1005494276": {
+        "total_amount": 0.0,
+        "spent": 0.0,
+        "expenses": [],
+        "categories": [],
+        "crypto_amount": 0.0,
+        "principal": 0.0,
+        "interest_rate": 0.0,
+        "days": 0,
+        "daily_budget": 0.0
+    },
+    "694981243": {
+        "total_amount": -1000000.0,
+        "spent": 0.0,
+        "expenses": [
+            {
+                "category": "������� ��� ��������",
+                "amount": 1000000.0
+            }
+        ],
+        "categories": [],
+        "crypto_amount": 0.0,
+        "principal": 0.0,
+        "interest_rate": 0.0,
+        "days": 0,
+        "daily_budget": 0
+    },
+    "800398690": {
+        "total_amount": 0.0,
+        "spent": 0.0,
+        "expenses": [],
+        "categories": [],
+        "crypto_amount": 0.0,
+        "principal": 0.0,
+        "interest_rate": 0.0,
+        "days": 0,
+        "daily_budget": 0.0
+    },
+    "1450797942": {
+        "total_amount": 6100.0,
+        "spent": 0.0,
+        "expenses": [],
+        "categories": [],
+        "crypto_amount": 0.0,
+        "principal": 0.0,
+        "interest_rate": 0.0,
+        "days": 28.0,
+        "daily_budget": 217.85714285714286
+    },
+    "897675986": {
+        "total_amount": 4.0,
+        "spent": 0.0,
+        "expenses": [],
+        "categories": [],
+        "crypto_amount": 0.0,
+        "principal": 0.0,
+        "interest_rate": 0.0,
+        "days": 4.0,
+        "daily_budget": 1.0
+    },
+    "1235224913": {
+        "total_amount": 0.0,
+        "spent": 0.0,
+        "expenses": [],
+        "categories": [],
+        "crypto_amount": 0.0,
+        "principal": 0.0,
+        "interest_rate": 0.0,
+        "days": 0,
+        "daily_budget": 0
+    },
+    "832615830": {
+        "total_amount": 1900000.0,
+        "spent": 0.0,
+        "expenses": [
+            {
+                "category": "������",
+                "amount": 1900.0
+            }
+        ],
+        "categories": [],
+        "crypto_amount": 0.0,
+        "principal": 0.0,
+        "interest_rate": 0.0,
+        "days": 198.0,
+        "daily_budget": 9595.959595959595
+    },
+    "781972019": {
+        "total_amount": 0.0,
+        "spent": 0.0,
+        "expenses": [],
+        "categories": [],
+        "crypto_amount": 0.0,
+        "principal": 0.0,
+        "interest_rate": 0.0,
+        "days": 0,
+        "daily_budget": 0
+    },
+    "1202021368": {
+        "total_amount": -1200.0,
+        "spent": 0.0,
+        "expenses": [
+            {
+                "category": "������� ����",
+                "amount": 1200.0
+            }
+        ],
+        "categories": [],
+        "crypto_amount": 0.0,
+        "principal": 0.0,
+        "interest_rate": 0.0,
+        "days": 0,
+        "daily_budget": 0
+    }
+}
