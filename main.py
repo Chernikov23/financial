@@ -58,6 +58,21 @@ def save_user_data(user_data):
         json.dump(user_data, file, ensure_ascii=False, indent=4)
     print("Данные пользователей сохранены.")
 
+user_data_file_path = 'user_data.json'
+
+# Проверяем, существует ли файл user_data.json и является ли он валидным JSON
+try:
+    with open(user_data_file_path, 'r') as file:
+        user_data = json.load(file)
+    print("ВСЕ ОТЛИЧНО")
+except FileNotFoundError:
+    # Если файл не найден, создаем новый с пустым объектом
+    user_data = {}
+    with open(user_data_file_path, 'w') as file:
+        json.dump(user_data, file)
+except json.JSONDecodeError:
+    # Если файл не является валидным JSON, выводим сообщение об ошибке
+    print(f"Файл {user_data_file_path} поврежден или не является валидным JSON.")
 
 def show_money_management_menu(message):
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True, row_width=2)
@@ -134,7 +149,7 @@ def start(message):
             'total_amount': 0.0, 
             'spent': 0.0, 
             'expenses': [], 
-            'categories': [], 
+            'categories': {}, 
             'crypto_amount': 0.0, 
             'principal': 0.0, 
             'interest_rate': 0.0, 
@@ -344,41 +359,40 @@ def process_expense_amount(message):
     else:
         bot.send_message(chat_id, "Пожалуйста, введите корректное число. Сумма расхода должна быть положительной.")
 
-
 def process_expense_category(message, amount):
     chat_id = str(message.chat.id)
     category = message.text.strip()
     
     user_data_local = load_user_data()  # Загружаем актуальные данные
+    
     # Инициализируем данные пользователя, если они ещё не были инициализированы
     if chat_id not in user_data_local:
         user_data_local[chat_id] = {
             'total_amount': 0.0, 
             'spent': 0.0, 
-            'expenses': [], 
-            'categories': [], 
+            'categories': {},  # Правильно инициализируем как словарь
             'crypto_amount': 0.0, 
             'principal': 0.0, 
             'interest_rate': 0.0, 
             'days': 0,
             'daily_budget': 0.0
         }
-
-    # Обновляем данные о трате
+    
+    # Добавляем или обновляем категорию с расходом
+    user_data_local[chat_id].setdefault('categories', {})[category] = user_data_local[chat_id].get('categories', {}).get(category, 0) + amount
+    
+    # Вычитаем сумму расхода из общего баланса
     user_data_local[chat_id]['total_amount'] -= amount
-    user_data_local[chat_id]['expenses'].append({'category': category, 'amount': amount})
-
+    
     # Пересчитываем дневной бюджет
-    days_left = max(user_data_local[chat_id].get('days', 1), 1)  # Предотвращаем деление на ноль
-    if days_left > 0 and user_data_local[chat_id]['total_amount'] > 0:
-        new_daily_budget = user_data_local[chat_id]['total_amount'] / days_left
-    else:
-        new_daily_budget = 0
+    days_left = max(user_data_local[chat_id].get('days', 1), 1)
+    new_daily_budget = max((user_data_local[chat_id]['total_amount'] / days_left), 0) if days_left > 0 else 0
     user_data_local[chat_id]['daily_budget'] = new_daily_budget
 
     save_user_data(user_data_local)  # Сохраняем обновленные данные пользователя
     
     bot.send_message(chat_id, f"Расход {amount}₽ на '{category}' добавлен. Ваш новый баланс: {user_data_local[chat_id]['total_amount']:.2f}₽\nДневной бюджет: {new_daily_budget:.2f}₽", reply_markup=main)
+
 
 
 def generate_expense_chart_and_summary(chat_id):
@@ -416,31 +430,31 @@ def display_expenses(message):
     chat_id = str(message.chat.id)
     user_data_local = load_user_data()  # Загружаем актуальные данные
 
-    if chat_id in user_data_local and 'expenses' in user_data_local[chat_id] and user_data_local[chat_id]['expenses']:
-        expenses = user_data_local[chat_id]['expenses']
-        
+    # Проверяем наличие категорий расходов вместо списка expenses
+    if chat_id in user_data_local and 'categories' in user_data_local[chat_id] and user_data_local[chat_id]['categories']:
         # Готовим данные для круговой диаграммы
-        categories = [expense['category'] for expense in expenses]
-        amounts = [expense['amount'] for expense in expenses]
-        
+        categories = user_data_local[chat_id]['categories']
+        labels = list(categories.keys())
+        sizes = list(categories.values())
+
         # Создаем круговую диаграмму
         fig, ax = plt.subplots()
-        ax.pie(amounts, labels=categories, autopct='%1.1f%%', startangle=90)
+        ax.pie(sizes, labels=labels, autopct='%1.1f%%', startangle=90)
         ax.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
 
         # Сохраняем диаграмму в память
         buf = io.BytesIO()
         plt.savefig(buf, format='png')
         buf.seek(0)
-        
+
         # Отправляем фото диаграммы пользователю
         bot.send_photo(chat_id, photo=buf)
-        
         plt.close(fig)  # Закрываем фигуру, чтобы освободить память
 
     else:
         # Если данных о расходах нет, сообщаем об этом пользователю
         bot.send_message(chat_id, "Расходы пока не добавлены. Используйте 'Внести трату', чтобы начать учет расходов.", reply_markup=main)
+
 @bot.message_handler(func=lambda message: message.text == "Криптовалюта")
 def show_crypto_options(message):
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True, row_width=2)
