@@ -14,6 +14,12 @@ import threading
 
 TOKEN = '6757224636:AAF6w4kJhnT4qYALsUrMUdMGNTgCa5jtBNA'
 bot = telebot.TeleBot(TOKEN)
+GEMINI_API_KEY = 'AIzaSyA8CDVJzTbLK-uwfSxxhdkP7vdFS6dC57g'  # ключ API Gemini
+genai.configure(api_key=GEMINI_API_KEY)
+model = genai.GenerativeModel('gemini-pro')
+MAX_MESSAGE_LENGTH = 4096
+
+
 startMes = 'Добро пожаловать к вашему надежному финансовому помощнику!\nЯ - ваш персональный финансовый ассистент, который поможет вам:\n🔹 Отслеживать расходы и доходы\n🔹 Планировать свой бюджет\n🔹 Ставить финансовые цели\nПрисоединяйтесь ко мне сегодня и начните контролировать свои финансы!'
 url = "https://ru.investing.com/currencies/usd-rub"
 doll = requests.get(url)
@@ -23,21 +29,26 @@ url2 = 'https://ru.investing.com/currencies/gbp-rub'
 fund = requests.get(url2)
 url3 = 'https://ru.investing.com/currencies/cny-rub'
 cny = requests.get(url3)
-# Global dictionary to store user data (expenses, budgets, etc.)
+
+
+
 courses = types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=False, row_width=2)
 fi = types.KeyboardButton('Фиат')
 crip = types.KeyboardButton('Криптовалюта')
 courses.add(fi,crip)
-GEMINI_API_KEY = 'AIzaSyA8CDVJzTbLK-uwfSxxhdkP7vdFS6dC57g'  # ключ API Gemini
-genai.configure(api_key=GEMINI_API_KEY)
-model = genai.GenerativeModel('gemini-pro')
+
+
+
 fiati = types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=False, row_width=2)
 dol = types.KeyboardButton('Курс доллара')
 e = types.KeyboardButton('Курс евро')
 fs = types.KeyboardButton('Курс фунтов стерлинга')
 cn = types.KeyboardButton('Курс юаней')
 fiati.add(dol,e,fs,cn)
-MAX_MESSAGE_LENGTH = 4096
+
+
+
+
 main = types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=False, row_width=2)
 itembtn1 = types.KeyboardButton("Управление деньгами")
 itembtn2 = types.KeyboardButton("Внести трату")
@@ -232,22 +243,18 @@ def num_of_users(message):
     except Exception as e:
         bot.reply_to(message, "Ошибка при подсчете пользователей: " + str(e))
 
-
-@bot.message_handler(func=lambda message: message.text == 'Курс доллара')
-def kursd(message):
-    dollar(message)
-
-@bot.message_handler(func=lambda message: message.text == 'Курс евро')
-def kerse(message):
-    euro(message)
-
-@bot.message_handler(func=lambda message: message.text == 'Курс фунтов стерлинга')
-def kersfs(message):
-    fund_sterling(message)
-
-@bot.message_handler(func=lambda message: message.text == 'Курс юаней')
-def kersy(message):
-    yani(message)
+@bot.message_handler(func=lambda message: message.text in ["Курс доллара", "Курс евро", "Курс фунтов стерлинга", "Курс юаней"])
+def values(message):
+    if message.text == "Курс доллара":
+        dollar(message)
+    elif message.text == 'Курс евро':
+        euro(message)
+    elif message.text == 'Курс фунтов стерлинга':
+        fund_sterling(message)
+    elif message.text == 'Курс юаней':
+        yani(message)
+    else: 
+        bot.send_message(message.chat.id, "Я не знаю такой команды/валюты")
 
 # Handler for 'Manage Money'
 @bot.message_handler(func=lambda message: message.text == 'Установить бюджет')
