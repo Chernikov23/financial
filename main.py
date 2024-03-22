@@ -11,7 +11,10 @@ import json
 import re
 import google.generativeai as genai
 import threading
+from threading import Lock
 
+
+user_data_lock = Lock()
 TOKEN = '6757224636:AAF6w4kJhnT4qYALsUrMUdMGNTgCa5jtBNA'
 bot = telebot.TeleBot(TOKEN)
 GEMINI_API_KEY = 'AIzaSyA8CDVJzTbLK-uwfSxxhdkP7vdFS6dC57g'  # ключ API Gemini
@@ -20,7 +23,7 @@ model = genai.GenerativeModel('gemini-pro')
 MAX_MESSAGE_LENGTH = 4096
 
 
-startMes = 'Добро пожаловать к вашему надежному финансовому помощнику!\nЯ - ваш персональный финансовый ассистент, который поможет вам:\n🔹 Отслеживать расходы и доходы\n🔹 Планировать свой бюджет\n🔹 Ставить финансовые цели\nПрисоединяйтесь ко мне сегодня и начните контролировать свои финансы!'
+startMes = 'Добро пожаловать к вашему надежному финансовому помощнику!\nЯ - ваш персональный финансовый ассистент, который поможет вам:\n🔹 Отслеживать расходы и доходы\n🔹 Планировать свой бюджет\n🔹 Ставить финансовые цели\nПрисоединяйтесь ко мне сегодня и начните контролировать свои финансы!\n Каждый час бот будет высылать актуальную информацию с курсами криптовалют. В любой момент вы можете отключить эту функцию'
 url = "https://ru.investing.com/currencies/usd-rub"
 doll = requests.get(url)
 url1 = 'https://ru.investing.com/currencies/eur-rub'
@@ -30,12 +33,6 @@ fund = requests.get(url2)
 url3 = 'https://ru.investing.com/currencies/cny-rub'
 cny = requests.get(url3)
 
-
-
-courses = types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=False, row_width=2)
-fi = types.KeyboardButton('Фиат')
-crip = types.KeyboardButton('Криптовалюта')
-courses.add(fi,crip)
 
 
 
@@ -52,22 +49,23 @@ fiati.add(dol,e,fs,cn)
 main = types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=False, row_width=2)
 itembtn1 = types.KeyboardButton("Управление деньгами")
 itembtn2 = types.KeyboardButton("Внести трату")
-itembtn3 = types.KeyboardButton("Курсы валют")
+itembtn3 = types.KeyboardButton("Курсы криптовалют")
 itembtn4 = types.KeyboardButton("Таблица трат")
 main.add(itembtn1, itembtn2, itembtn3, itembtn4)
 
 def load_user_data():
-    try:
-        with open('user_data.json', 'r') as file:
-            return json.load(file)
-    except (FileNotFoundError, json.JSONDecodeError):
-        return {}
-user_data = load_user_data()
-print("Загружены данные пользователей:", user_data)
+    with user_data_lock:
+        try:
+            with open('user_data.json', 'r') as file:
+                return json.load(file)
+        except (FileNotFoundError, json.JSONDecodeError):
+            return {}
+
 def save_user_data(user_data):
-    with open('user_data.json', 'w') as file:
-        json.dump(user_data, file, ensure_ascii=False, indent=4)
-    print("Данные пользователей сохранены.")
+    with user_data_lock:
+        with open('user_data.json', 'w') as file:
+            json.dump(user_data, file, ensure_ascii=False, indent=4)
+
 
 user_data_file_path = 'user_data.json'
 
@@ -110,14 +108,6 @@ def safe_float_conversion(user_input):
         return None
 
 
-@bot.message_handler(func=lambda message:message.text == 'Курсы валют')
-def cour(message):
-    bot.send_message(message.chat.id, 'Выберите тип валюты', reply_markup=courses)
-
-@bot.message_handler(func=lambda message:message.text == 'Фиат')
-def fiat(message):
-    bot.send_message(message.chat.id, 'Выберите валюту', reply_markup=fiati)
-
 @bot.message_handler(func=lambda message: message.text == "Рассчитать криптовалюту")
 def ask_for_crypto_amount(message):
     msg = bot.send_message(message.chat.id, "Введите количество коинов:")
@@ -143,6 +133,8 @@ def calculate_crypto_value(message, amount):
 
 
 def print_user_data_periodically():
+    # Загружаем данные пользователей внутри функции
+    user_data = load_user_data()
     print("Текущее состояние user_data:", user_data)
     # Запланировать следующий вызов
     threading.Timer(6000, print_user_data_periodically).start()
@@ -161,6 +153,7 @@ def start(message):
             'spent': 0.0, 
             'expenses': [], 
             'categories': {}, 
+            'sendCourses': True,
             'crypto_amount': 0.0, 
             'principal': 0.0, 
             'interest_rate': 0.0, 
@@ -170,66 +163,6 @@ def start(message):
         save_user_data(user_data_local)
     bot.send_message(chat_id, startMes, reply_markup=main)
 
-
-    
-
-
-def dollar(message):
-    if doll.status_code == 200:
-        # Используем BeautifulSoup для парсинга HTML
-        soup = BeautifulSoup(doll.text, 'html.parser')
-
-        # Находим div с нужным классом
-        div_element = soup.find('div', class_='text-5xl/9 font-bold md:text-[42px] md:leading-[60px] text-[#232526]')
-
-        # Печатаем текст из найденного элемента
-        if div_element:
-            bot.send_message(message.chat.id, f'1$ США = {div_element.text.strip()}₽', reply_markup=main)
-    else:
-        bot.send_message(message.chat.id, f"Ошибка при запросе страницы. Код ответа: {doll.status_code}", reply_markup=main)
-def euro(message):
-    if eu.status_code == 200:
-        # Используем BeautifulSoup для парсинга HTML
-        soup = BeautifulSoup(eu.text, 'html.parser')
-
-        # Находим div с нужным классом
-        div_element = soup.find('div', class_='text-5xl/9 font-bold md:text-[42px] md:leading-[60px] text-[#232526]')
-
-        # Печатаем текст из найденного элемента
-        if div_element:
-            bot.send_message(message.chat.id, f'1€ = {div_element.text.strip()}₽', reply_markup=main)
-    else:
-        bot.send_message(message.chat.id, f"Ошибка при запросе страницы. Код ответа: {eu.status_code}", reply_markup=main)
-
-
-def fund_sterling(message):
-    if fund.status_code == 200:
-        # Используем BeautifulSoup для парсинга HTML
-        soup = BeautifulSoup(fund.text, 'html.parser')
-
-        # Находим div с нужным классом
-        div_element = soup.find('div', class_='text-5xl/9 font-bold md:text-[42px] md:leading-[60px] text-[#232526]')
-
-        # Печатаем текст из найденного элемента
-        if div_element:
-            bot.send_message(message.chat.id, f'1£ Стерлинга = {div_element.text.strip()}₽', reply_markup=main)
-    else:
-        bot.send_message(message.chat.id, f"Ошибка при запросе страницы. Код ответа: {fund.status_code}", reply_markup=main)
-
-
-def yani(message):
-    if cny.status_code == 200:
-        # Используем BeautifulSoup для парсинга HTML
-        soup = BeautifulSoup(cny.text, 'html.parser')
-
-        # Находим div с нужным классом
-        div_element = soup.find('div', class_='text-5xl/9 font-bold md:text-[42px] md:leading-[60px] text-[#232526]')
-
-        # Печатаем текст из найденного элемента
-        if div_element:
-            bot.send_message(message.chat.id, f'1¥ = {div_element.text.strip()}₽', reply_markup=main)
-    else:
-        bot.send_message(message.chat.id, f"Ошибка при запросе страницы. Код ответа: {cny.status_code}", reply_markup=main)
 
 
 
@@ -243,18 +176,6 @@ def num_of_users(message):
     except Exception as e:
         bot.reply_to(message, "Ошибка при подсчете пользователей: " + str(e))
 
-@bot.message_handler(func=lambda message: message.text in ["Курс доллара", "Курс евро", "Курс фунтов стерлинга", "Курс юаней"])
-def values(message):
-    if message.text == "Курс доллара":
-        dollar(message)
-    elif message.text == 'Курс евро':
-        euro(message)
-    elif message.text == 'Курс фунтов стерлинга':
-        fund_sterling(message)
-    elif message.text == 'Курс юаней':
-        yani(message)
-    else: 
-        bot.send_message(message.chat.id, "Я не знаю такой команды/валюты")
 
 # Handler for 'Manage Money'
 @bot.message_handler(func=lambda message: message.text == 'Установить бюджет')
@@ -462,7 +383,7 @@ def display_expenses(message):
         # Если данных о расходах нет, сообщаем об этом пользователю
         bot.send_message(chat_id, "Расходы пока не добавлены. Используйте 'Внести трату', чтобы начать учет расходов.", reply_markup=main)
 
-@bot.message_handler(func=lambda message: message.text == "Криптовалюта")
+@bot.message_handler(func=lambda message: message.text == "Курсы криптовалют")
 def show_crypto_options(message):
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True, row_width=2)
     cryptos = ["Bitcoin", "Ethereum", "Tether USDt", "Solana", "BNB", "XRP", "USDC", "Cardano", "Avalanche", "Dogecoin", "Chainlink", "Tron", "Polkadot", "Polygon", "Toncoin"]
@@ -499,6 +420,73 @@ def crypto_price(message):
 def ask_for_principal(message):
     msg = bot.send_message(message.chat.id, "Введите сумму кредита:")
     bot.register_next_step_handler(msg, process_principal_step)
+
+def get_currency_rates():
+    urls = {
+        "Bitcoin": "https://coinmarketcap.com/currencies/bitcoin/",  
+        "TonCoin": "https://coinmarketcap.com/currencies/toncoin/",
+        "Ethereum": "https://coinmarketcap.com/currencies/ethereum/",
+        "Tether USDt": 'https://coinmarketcap.com/currencies/tether/',
+        "Solana": "https://coinmarketcap.com/currencies/solana/",
+        "BNB": "https://coinmarketcap.com/currencies/bnb/",
+        "Avalanche": "https://coinmarketcap.com/currencies/avalanche/",
+        "Dogecoin": "https://coinmarketcap.com/currencies/dogecoin/",
+        "Chainlink": "https://coinmarketcap.com/currencies/chainlink/",
+        "Tron": "https://coinmarketcap.com/currencies/tron/",
+    }
+    rates = {}
+
+    for currency, url in urls.items():
+        response = requests.get(url, headers={'User-Agent': 'Mozilla/5.0'})
+        if response.status_code == 200:
+            soup = BeautifulSoup(response.content, 'html.parser')
+            
+            # Условные селекторы, измените их на актуальные для вашего случая
+            if currency == "Dollar":
+                price_container = soup.find('div', class_='text-5xl/9 font-bold md:text-[42px] md:leading-[60px] text-[#232526]')
+            else:
+                price_container = soup.find('div', class_='sc-f70bb44c-0 flfGQp flexStart alignBaseline')
+            
+            if price_container:
+                price = price_container.find('span', class_='sc-f70bb44c-0 jxpCgO base-text').text
+                rates[currency] = price
+        else:
+            rates[currency] = "Ошибка при запросе"
+
+    # Формируем сообщение с курсами валют
+    rates_message = "Курсы валют:\n" + "\n".join([f"<b>{currency}</b>: <u>{rate}</u>\n" for currency, rate in rates.items()])
+    final = "Хотите ли вы получать уведомления о курсах валют?"
+    return rates_message+final
+
+def send_currency_rates():
+    user_data = load_user_data()
+    
+    for chat_id in user_data:
+        if user_data[chat_id].get('sendCourses', False):
+            rates_message = get_currency_rates()
+            markup = types.InlineKeyboardMarkup()
+            yes_button = types.InlineKeyboardButton(text="Да", callback_data="continue_yes")
+            no_button = types.InlineKeyboardButton(text="Нет", callback_data="continue_no")
+            markup.add(yes_button, no_button)
+            bot.send_message(chat_id, rates_message, reply_markup=markup, parse_mode='HTML')
+    # Перезапускаем задачу через 3600 секунд (1 час)
+    threading.Timer(3600, send_currency_rates).start()
+
+
+@bot.callback_query_handler(func=lambda call: call.data.startswith('continue_'))
+def handle_subscription_callback(call):
+    chat_id = str(call.message.chat.id)
+    user_data = load_user_data()
+    if call.data == "continue_yes":
+        bot.answer_callback_query(call.id, "Спасибо! Рассылка с курсами будет продолжаться")
+        user_data[chat_id]['sendCourses'] = True
+        save_user_data(user_data)
+    elif call.data == "continue_no":
+        if chat_id in user_data:
+            user_data[chat_id]['sendCourses'] = False
+            save_user_data(user_data)
+        bot.answer_callback_query(call.id, "Вы отписались от рассылки курсов валют.")
+
 
 def decrement_days():
     user_data = load_user_data()
@@ -563,6 +551,12 @@ def handle_menu_options(message):
     if message.text == "Управление деньгами":
         show_money_management_menu(message)
 
-decrement_days()
+def run_periodic_tasks():
+    # Запуск функций в отдельных потоках
+    threading.Thread(target=send_currency_rates).start()
+    threading.Thread(target=decrement_days).start()
+
 if __name__ == '__main__':
+    # Запускаем периодические задачи в отдельном потоке
+    run_periodic_tasks()
     bot.infinity_polling()
